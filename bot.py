@@ -9,17 +9,21 @@ import logging
 import sys
 from menucommands.set_bot_commands  import set_default_commands
 from baza.sqlite import Database
-from filters.admin import IsBotAdminFilter
-from filters.check_sub_channel import IsCheckSubChannels
+from filtery.admin import IsBotAdminFilter
+from filtery.check_sub_channel import IsCheckSubChannels
 from keyboard_buttons import admin_keyboard
 from aiogram.fsm.context import FSMContext
-from middlewares.throttling import ThrottlingMiddleware #new
+from middlewares.throttling import ThrottlingMiddleware 
 from states.reklama import Adverts
-from aiogram.types import InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton,FSInputFile,InputMediaPhoto
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import time 
+from tik_tok import tiktok_save
+from insta import insta_save
+from yutube import youtube_save
 ADMINS = config.ADMINS
 TOKEN = config.BOT_TOKEN
+
 CHANNELS = config.CHANNELS
 
 dp = Dispatcher()
@@ -31,9 +35,9 @@ async def start_command(message:Message):
     telegram_id = message.from_user.id
     try:
         db.add_user(full_name=full_name,telegram_id=telegram_id)
-        await message.answer(text="Assalomu alaykum, botimizga hush kelibsiz")
+        await message.answer(text=f"Assalomu alaykum,{full_name} botimizga hush kelibsiz\n tik tok Youtube instagramdan link yuboring men sizga vidyo yuklab beraman")
     except:
-        await message.answer(text="Assalomu alaykum")
+        await message.answer(text=f"Assalomu alaykum, {full_name} botimizga hush kelibsiz\n tik tok Youtube instagramdan link yuboring men sizga vidyo yuklab beraman")
 
 
 @dp.message(IsCheckSubChannels())
@@ -49,6 +53,10 @@ async def kanalga_obuna(message:Message):
 
 
 
+
+@dp.message(Command("help"),IsBotAdminFilter(ADMINS))
+async def is_admin(message:Message):
+    await message.answer(text="Bu botimiz instagram teligram youTobe dan vidyo skschat qilib beradi")
 
 
 #Admin panel uchun
@@ -86,6 +94,51 @@ async def send_advert(message:Message,state:FSMContext):
     await message.answer(f"Reklama {count}ta foydalanuvchiga yuborildi")
     await state.clear()
 
+@dp.message(F.text.contains("instagram"))
+async def instagram_download(message:Message):
+    await message.answer(text="video yuklanmoqda 🚀")
+    link = message.text
+    result = insta_save(link)
+    await message.answer(text="Ozroq kuting")
+    if result[0]=="video":
+        await message.answer_video(video=result[1],caption="Admin: @Alisherov1ch_002")
+    elif result[0]=="rasm":
+        await message.answer_photo(photo=result[1], caption="Admin: @Alisherov1ch_002")
+    else:
+        await message.answer("You sent the wrong link")
+
+
+
+
+@dp.message(F.text.contains("youtu"))
+async def youtube_download(message:Message):
+    await message.answer(text="video yuklanmoqda 🚀")
+    result = youtube_save(message.text)
+    video = FSInputFile(result)
+    await message.answer_video(video=video, caption="ADMIN: @Alisherov1ch_002")
+
+@dp.message(F.text.contains("tiktok"))
+async def tiktok_download(message:Message):
+    await message.answer(text="video yuklanmoqda 🚀")
+    link = message.text
+    tiktok = tiktok_save(link)
+    
+    video=tiktok.get("video")
+    music=tiktok.get("music")
+    rasmlar=tiktok.get("images")
+    if rasmlar: 
+        rasm = []
+        for i,r in enumerate(rasmlar):
+            rasm.append(InputMediaPhoto(media=r))
+            if (i+1)%10==0:
+                await message.answer_media_group(rasm)
+                rasm=[]
+        if rasm:
+            await message.answer_media_group(rasm)
+    elif video:
+        await message.answer_video(video=video,caption="Admin: @Alisherov1ch_002")
+    if music: 
+        await message.answer_audio(audio=music)
 
 
 
