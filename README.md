@@ -23,3 +23,4 @@ Linux/Mac
 python3 app.py
 ```
 "# davillond-yengil-yukla-bot" 
+"# Dovillond-bot" 
