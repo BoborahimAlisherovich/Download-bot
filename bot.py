@@ -96,27 +96,38 @@ async def send_advert(message:Message,state:FSMContext):
 
 @dp.message(F.text.contains("instagram"))
 async def instagram_download(message:Message):
-    await message.answer(text="video yuklanmoqda 🚀")
-    link = message.text
-    result = insta_save(link)
-    await message.answer(text="Ozroq kuting")
-    if result[0]=="video":
-        await message.answer_video(video=result[1],caption="Admin: @Alisherov1ch_002")
-    elif result[0]=="rasm":
-        await message.answer_photo(photo=result[1], caption="Admin: @Alisherov1ch_002")
+    
+    if message == True:
+        await message.answer(text="video yuklanmoqda 🚀")
+        link = message.text
+        await message.answer(text="Ozroq kuting")
+        result = insta_save(link)
+      
+        if result[0]=="video":
+            await message.answer_video(video=result[1],caption="Admin: @Alisherov1ch_002")
+        elif result[0]=="rasm":
+            await message.answer_photo(photo=result[1], caption="Admin: @Alisherov1ch_002")
+        else:
+            await message.answer("You sent the wrong link")
     else:
-        await message.answer("You sent the wrong link")
+        await message.answer("Xatolik yuz berdi ")
 
 
 
 
 @dp.message(F.text.contains("youtu"))
 async def youtube_download(message:Message):
-    await message.answer(text="video yuklanmoqda 🚀")
-    result = youtube_save(message.text)
-    video = FSInputFile(result)
-    await message.answer_video(video=video, caption="ADMIN: @Alisherov1ch_002")
 
+    if message == True:
+
+        await message.answer(text="video yuklanmoqda 🚀")
+        result = youtube_save(message.text)
+        video = FSInputFile(result)
+        await message.answer_video(video=video, caption="ADMIN: @Alisherov1ch_002")
+    else:
+         await message.answer("Xatolik yuz berdi ")
+
+         
 @dp.message(F.text.contains("tiktok"))
 async def tiktok_download(message:Message):
     await message.answer(text="video yuklanmoqda 🚀")
