@@ -24,6 +24,8 @@ from yutube import youtube_save
 ADMINS = config.ADMINS
 TOKEN = config.BOT_TOKEN
 
+
+
 CHANNELS = config.CHANNELS
 
 dp = Dispatcher()
@@ -97,11 +99,12 @@ async def send_advert(message:Message,state:FSMContext):
 @dp.message(F.text.contains("instagram"))
 async def instagram_download(message:Message):
     
-    if message == True:
+  
         await message.answer(text="video yuklanmoqda 🚀")
         link = message.text
-        await message.answer(text="Ozroq kuting")
+        
         result = insta_save(link)
+        await message.answer(text="Video tayyor")
       
         if result[0]=="video":
             await message.answer_video(video=result[1],caption="Admin: @Alisherov1ch_002")
@@ -109,23 +112,21 @@ async def instagram_download(message:Message):
             await message.answer_photo(photo=result[1], caption="Admin: @Alisherov1ch_002")
         else:
             await message.answer("You sent the wrong link")
-    else:
-        await message.answer("Xatolik yuz berdi ")
 
 
 
 
-@dp.message(F.text.contains("youtu"))
+
+@dp.message(F.text.contains("youtube"))
 async def youtube_download(message:Message):
 
-    if message == True:
-
         await message.answer(text="video yuklanmoqda 🚀")
+
         result = youtube_save(message.text)
+        await message.answer(text="Video tayyor")
         video = FSInputFile(result)
         await message.answer_video(video=video, caption="ADMIN: @Alisherov1ch_002")
-    else:
-         await message.answer("Xatolik yuz berdi ")
+
 
          
 @dp.message(F.text.contains("tiktok"))
