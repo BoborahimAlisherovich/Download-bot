@@ -37,9 +37,9 @@ async def start_command(message:Message):
     telegram_id = message.from_user.id
     try:
         db.add_user(full_name=full_name,telegram_id=telegram_id)
-        await message.answer(text=f"Assalomu alaykum,{full_name} botimizga hush kelibsiz\n tik tok Youtube instagramdan link yuboring men sizga vidyo yuklab beraman")
+        await message.answer(text=f"Assalomu alaykum,{full_name} botimizga hush kelibsiz\nTikTok Youtube Instagramdan link yuboring men sizga video yuklab beraman")
     except:
-        await message.answer(text=f"Assalomu alaykum, {full_name} botimizga hush kelibsiz\n tik tok Youtube instagramdan link yuboring men sizga vidyo yuklab beraman")
+        await message.answer(text=f"Assalomu alaykum,{full_name} botimizga hush kelibsiz\nTikTok Youtube Instagramdan link yuboring men sizga video yuklab beraman")
 
 
 @dp.message(IsCheckSubChannels())
@@ -56,7 +56,7 @@ async def kanalga_obuna(message:Message):
 
 
 
-@dp.message(Command("help"),IsBotAdminFilter(ADMINS))
+@dp.message(Command("help"))
 async def is_admin(message:Message):
     await message.answer(text="Bu botimiz instagram teligram youTobe dan vidyo skschat qilib beradi")
 
@@ -83,7 +83,7 @@ async def send_advert(message:Message,state:FSMContext):
     
     message_id = message.message_id
     from_chat_id = message.from_user.id
-    users = await db.all_users_id()
+    users = db.all_users_id()
     count = 0
     for user in users:
         try:
@@ -119,13 +119,14 @@ async def instagram_download(message:Message):
 
 @dp.message(F.text.contains("youtube"))
 async def youtube_download(message:Message):
+        try:
+            await message.answer(text="video yuklanmoqda 🚀")
 
-        await message.answer(text="video yuklanmoqda 🚀")
-
-        result = youtube_save(message.text)
-        await message.answer(text="Video tayyor")
-        video = FSInputFile(result)
-        await message.answer_video(video=video, caption="ADMIN: @Alisherov1ch_002")
+            result = youtube_save(message.text)
+            video = FSInputFile(result)
+            await message.answer_video(video=video, caption="ADMIN: @Alisherov1ch_002")
+        except:
+            await message.answer(text="Bu videoni yuklay olmadi.")
 
 
          
